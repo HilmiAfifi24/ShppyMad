@@ -16,7 +16,7 @@ export const registerUser = async (name, email, password) => {
 // Fungsi untuk login
 export const loginUser = async (email, password) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, { email, password });
+    const response = await axios.post(`${API_URL}/login`, { email, password }, { headers: { "Accept": "application/json" } });
 
     if (response.data.token) {
       localStorage.setItem("auth_token", response.data.token);
@@ -25,7 +25,7 @@ export const loginUser = async (email, password) => {
     return response.data;
   } catch (error) {
     console.error("Login error:", error.response?.data || error.message);
-    return null;
+    throw new Error(error.response?.data?.message || "Terjadi error saat login");
   }
 };
 

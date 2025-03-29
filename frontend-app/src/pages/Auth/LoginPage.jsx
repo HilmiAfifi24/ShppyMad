@@ -22,16 +22,12 @@ export default function LoginPage() {
         setError(null);
         try {
             const response = await loginUser(formData.email, formData.password);
-            if (response && response.token) {
-                localStorage.setItem("token", response.token);
+            if (response?.token) {
                 alert("Login berhasil!");
                 navigate("/products");
             } else {
                 setError("Login gagal, periksa kembali data Anda.");
             }
-            
-            alert("Login berhasil!");
-            navigate("/products"); // Arahkan ke halaman utama
         } catch (err) {
             setError(err.message || "Gagal login, periksa kembali data Anda.");
         }

@@ -17,18 +17,30 @@ const Footer = () => (
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
+        setError(""); // Reset error state
         const data = await getProducts();
-        setProducts(data || []); // Pastikan data tidak undefined/null
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
+
+        console.log("Fetched products:", data); // Debugging API response
+
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid data format from API");
+        }
+
+        setProducts(data);
+      } catch (err) {
+        console.error("Failed to fetch products:", err);
+        setError("Failed to fetch products. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
   }, []);
 
@@ -43,22 +55,34 @@ const ProductsPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading ? (
             <p className="text-white">Loading products...</p>
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
           ) : products.length > 0 ? (
-            products.map((product) => (
-              <CardProduct key={product.id}>
-                <CardProduct.Header src={product.image || "https://media.istockphoto.com/id/2120395013/photo/laptop-image.webp?a=1&b=1&s=612x612&w=0&k=20&c=C_uJL46B6QFusEybJpLMIjVznx90QX1i-NAHxaiFyvg="} />
-                <CardProduct.Body
-                  nama_product={product.nama_product || "No Title"}
-                  deskripsi={product.deskripsi || "No Description"}
-                />
-                <CardProduct.Footer
-                  harga={`Rp ${(product.harga || 0).toLocaleString()}`}
-                  handleAddToCart={() => handleAddToCart(product)}
-                />
-              </CardProduct>
-            ))
+            products.map((product) => {
+              console.log("Rendering product:", product); // Debugging rendering
+              return (
+                <CardProduct key={product.id}>
+                  <CardProduct.Header
+                    src={
+                      product.image ??
+                      "https://images.unsplash.com/photo-1502877338535-766e1452684a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y2FyfGVufDB8fDB8fHww"
+                    }
+                  />
+                  <CardProduct.Body
+                    nama_product={product.nama_product ?? "No Title"}
+                    deskripsi={product.deskripsi ?? "No Description"}
+                  />
+                  <CardProduct.Footer
+                    harga={`Rp ${(product.harga || 0).toLocaleString()}`}
+                    handleAddToCart={() => handleAddToCart(product)}
+                  />
+                </CardProduct>
+              );
+            })
           ) : (
-            <p className="text-white">No products available.</p>
+            <p className="text-gray-400 text-center w-full">
+              No products available.
+            </p>
           )}
         </div>
       </main>
