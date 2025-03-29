@@ -3,16 +3,16 @@ import { getProducts } from "../../services/Product.service";
 import CardProduct from "../../components/Fragments/CardProduct";
 
 const HeaderSection = ({ cartCount }) => (
-  <header className="bg-gray-900 text-white py-6 px-8 shadow-lg text-center flex justify-between items-center">
-    <h1 className="text-3xl font-bold">Product List</h1>
-    <div className="bg-gray-800 px-4 py-2 rounded-lg">
+  <header className="bg-gradient-to-r from-orange-600 to-orange-500 text-white py-6 px-8 shadow-lg text-center flex justify-between items-center">
+    <h1 className="text-3xl font-bold">🔥 Product List</h1>
+    <div className="bg-orange-700 px-4 py-2 rounded-lg shadow-md">
       🛒 Cart: <span className="font-bold">{cartCount}</span>
     </div>
   </header>
 );
 
 const FooterSection = () => (
-  <footer className="bg-gray-900 text-gray-400 py-6 text-center mt-10 border-t border-gray-700">
+  <footer className="bg-gradient-to-r from-orange-600 to-orange-500 text-white py-6 text-center mt-10 border-t border-orange-700 shadow-lg">
     <p>&copy; 2025 Your Store. All rights reserved.</p>
   </footer>
 );
@@ -42,7 +42,6 @@ const ProductsPage = () => {
     fetchData();
   }, []);
 
-  // fungsi menambahkan cart ke keranjang
   const handleAddToCart = (product) => {
     setProducts((prevProducts) =>
       prevProducts.map((p) =>
@@ -64,22 +63,22 @@ const ProductsPage = () => {
     console.log("Added to cart:", product);
   };
 
-
   return (
-    <div className="min-h-screen flex flex-col bg-gray-950 text-white">
+    <div className="min-h-screen flex flex-col bg-orange-100 text-gray-900">
       <HeaderSection cartCount={cart.reduce((total, item) => total + item.quantity, 0)} />
+      
       <main className="flex-grow p-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {loading ? (
-            <p className="text-gray-400">Loading products...</p>
+            <p className="text-orange-700">Loading products...</p>
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : products.length > 0 ? (
             products.map((product) => (
-              <CardProduct key={product.id}>
+              <CardProduct key={product.id} className="shadow-lg border border-orange-300 rounded-lg">
                 <CardProduct.Header
                   src={
-                    product.image ??
+                    product.image ?? 
                     "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2FyfGVufDB8fDB8fHww"
                   }
                 />
@@ -97,31 +96,37 @@ const ProductsPage = () => {
                       alert("Stok habis!");
                     }
                   }}
+                  className="bg-orange-500 hover:bg-orange-600 transition-all duration-300 text-white font-semibold py-2 rounded-lg shadow-md"
                 />
-
               </CardProduct>
             ))
           ) : (
-            <p className="text-gray-400 text-center w-full">No products available.</p>
+            <p className="text-orange-700 text-center w-full">No products available.</p>
           )}
         </div>
+
         {/* Cart Section */}
-        <div className="mt-10 p-5 bg-gray-800 rounded-lg">
-          <h2 className="text-xl font-bold mb-4">Shopping Cart</h2>
+        <div className="mt-10 p-5 bg-orange-200 rounded-lg shadow-lg">
+          <h2 className="text-xl font-bold mb-4 text-orange-800">🛒 Shopping Cart</h2>
           {cart.length > 0 ? (
             <ul className="space-y-2">
               {cart.map((item) => (
-                <li key={item.id} className="flex justify-between bg-gray-700 p-3 rounded-md">
-                  <span>{item.nama_product} (x{item.quantity})</span>
-                  <span className="font-bold">Rp {(item.harga * item.quantity).toLocaleString()}</span>
+                <li key={item.id} className="flex justify-between bg-orange-300 p-3 rounded-md">
+                  <span className="text-orange-900 font-medium">
+                    {item.nama_product} (x{item.quantity})
+                  </span>
+                  <span className="font-bold text-orange-700">
+                    Rp {(item.harga * item.quantity).toLocaleString()}
+                  </span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-gray-400">Your cart is empty.</p>
+            <p className="text-orange-700">Your cart is empty.</p>
           )}
         </div>
       </main>
+
       <FooterSection />
     </div>
   );
